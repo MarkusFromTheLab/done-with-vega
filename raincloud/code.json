@@ -1,0 +1,128 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.2.json",
+  "description": "Raincloud with violin centered at zero axis, boxplot at baseline, and jittered points below.",
+  "width": 800,
+  "height": 250,
+  "data": {
+    "name": "penguins",
+    "url": "https://vega.github.io/vega/data/penguins.json"
+  },
+  "layer": [
+    {
+      "layer": [
+        {
+          "transform": [
+            {"density": "Body Mass (g)", "bandwidth": 200},
+            {"calculate": "-datum.density", "as": "negDensity"}
+          ],
+          "mark": {"type": "area", "opacity": 0.5, "color": "#888888"},
+          "encoding": {
+            "x": {
+              "field": "value",
+              "type": "quantitative",
+              "title": "Value",
+              "axis": {"tickCount": 6}
+            },
+            "y": {
+              "field": "density",
+              "type": "quantitative",
+              "title": null,
+              "axis": {"grid": true, "values": [0]},
+              "scale": {"zero": true}
+            },
+            "y2": {"value": 0},
+            "tooltip": [
+              {
+                "field": "value",
+                "type": "quantitative",
+                "title": "Body Mass (g)"
+              },
+              {"field": "density", "type": "quantitative", "title": "Density"}
+            ]
+          }
+        },
+        {
+          "transform": [
+            {"density": "Body Mass (g)", "bandwidth": 200},
+            {"calculate": "-datum.density", "as": "negDensity"}
+          ],
+          "mark": {"type": "area", "opacity": 0, "color": "#888888"},
+          "encoding": {
+            "x": {
+              "field": "value",
+              "type": "quantitative",
+              "title": "Value",
+              "axis": {"tickCount": 6}
+            },
+            "y": {
+              "field": "0",
+              "type": "quantitative",
+              "title": null,
+              "axis": {"grid": true, "values": [0]},
+              "scale": {"zero": true}
+            },
+            "y2": {"field": "negDensity"},
+            "tooltip": [
+              {
+                "field": "value",
+                "type": "quantitative",
+                "title": "Body Mass (g)"
+              },
+              {"field": "density", "type": "quantitative", "title": "Density"}
+            ]
+          }
+        }
+      ],"resolve": {"scale": {"y": "shared"}}
+    },
+    {
+      "transform": [{"calculate": "-random() * 1", "as": "jitterY"}],
+      "mark": {
+        "type": "circle",
+        "size": 52,
+        "opacity": 0.75,
+        "fill": "#5B8FF9",
+        "stroke": "black",
+        "strokeOpacity": 0.15
+      },
+      "encoding": {
+        "x": {
+          "field": "Body Mass (g)",
+          "type": "quantitative",
+          "scale": {"domain": [2000, 7000]}
+        },
+        "y": {
+          "field": "jitterY",
+          "type": "quantitative",
+          "title": null,
+          "axis": null,
+          "scale": {"domain": [-1, 1]}
+        },
+        "tooltip": [
+          {"field": "Body Mass (g)", "type": "quantitative", "title": "Value"}
+        ]
+      }
+    },
+    {
+      "mark": {
+        "type": "boxplot",
+        "size": 24,
+        "opacity": 1,
+        "color": "#B59410",
+        "outliers": false,
+        "extent": 0.5,
+        "rule": {"strokeWidth": 8}
+      },
+      "encoding": {
+        "x": {
+          "field": "Body Mass (g)",
+          "type": "quantitative",
+          "bandPosition": 0
+        },
+        "tooltip": [
+          {"field": "Body Mass (g)", "type": "quantitative", "title": "Value"}
+        ]
+      }
+    }
+  ],
+  "resolve": {"scale": {"y": "independent"}}
+}
